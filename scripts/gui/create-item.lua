@@ -219,7 +219,16 @@ function hackWish(unit)
    return false
   else
    if mattype and itemtype then
-    createItem({mattype,matindex},{itemtype,itemsubtype},quality,unit,description)
+    repeat amountok,amount=script.showInputPrompt('Wish','How many do you want? (numbers only!)',COLOR_LIGHTGREEN) until tonumber(amount)
+    if not amountok then amount=1 end
+    if df.item_type.attrs[itemtype].is_stackable then
+     local proper_item=df.item.find(dfhack.items.createItem(itemtype, itemsubtype, mattype, matindex, unit))
+     proper_item:setStackSize(amount)
+    else
+     for i=1,amount do
+      dfhack.items.createItem(itemtype, itemsubtype, mattype, matindex, unit)
+     end
+    end
     return true
    end
    return false
